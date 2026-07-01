@@ -123,10 +123,10 @@ def create_app() -> FastAPI:
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(SecurityHeadersMiddleware)
 
-    from .routes import system, models, pipeline
+    from .routes import system, models, datasets, pipeline
     app.include_router(system.router)
     app.include_router(models.router)
-    app.include_router(pipeline.datasets)
+    app.include_router(datasets.router)
     app.include_router(pipeline.training)
     app.include_router(pipeline.export)
     app.include_router(pipeline.chat)

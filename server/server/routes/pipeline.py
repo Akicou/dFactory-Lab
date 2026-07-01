@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-datasets = APIRouter(prefix="/api/datasets", tags=["datasets"])
 training = APIRouter(prefix="/api/training", tags=["training"])
 export = APIRouter(prefix="/api/export", tags=["export"])
 chat = APIRouter(prefix="/api/chat", tags=["chat"])
@@ -21,17 +20,6 @@ def _todo(phase: int, feature: str) -> dict:
         status_code=501,
         detail=f"{feature} is implemented in Phase {phase} (see Checklist.md).",
     )
-
-
-# ── datasets (Phase 3) ───────────────────────────────────────────────────────
-@datasets.get("")
-async def datasets_list(): _todo(3, "GET /api/datasets")
-@datasets.post("")
-async def datasets_create(): _todo(3, "POST /api/datasets")
-@datasets.post("/build")
-async def datasets_build(): _todo(3, "POST /api/datasets/build")
-@datasets.get("/{dataset_id}/preview")
-async def datasets_preview(dataset_id: str): _todo(3, "GET /api/datasets/{id}/preview")
 
 
 # ── training (Phase 4) ───────────────────────────────────────────────────────
