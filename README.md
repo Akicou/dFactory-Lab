@@ -65,19 +65,28 @@ dFactory-Lab/
 This repository is at **Phase 0 — Foundation**. The engine is vendored and the full build roadmap is captured in
 [`Checklist.md`](./Checklist.md). Server and UI are built phase-by-phase; each phase ends with a git commit.
 
-## Quick start (engine only, today)
+## Quick start
 
 ```bash
 git clone <this-repo>.git --recursive        # --recursive fetches the VeOmni submodule
 cd dFactory-Lab
 
-# environment (option A — uv, recommended)
+# 1. backend deps (CPU-only is enough for everything except a real GPU training run)
+python -m venv .venv && .venv/Scripts/python -m pip install -e 'server[dev,engine]'
+
+# 2. frontend
+cd web && npm ci && npm run build && cd ..
+
+# 3. run — the server serves the SPA at / and the API at /api/*
+.venv/Scripts/python server/run.py            # → http://127.0.0.1:8000
+# (or: sh lab.sh  — builds the frontend if missing, then runs)
+```
+
+For an actual block-diffusion training run you additionally need `torch` and the
+VeOmni runtime:
+
+```bash
 cd VeOmni && uv sync --extra gpu && source .venv/bin/activate && cd ..
-
-# environment (option B — pip)
-pip install -e VeOmni/
-
-# the Lab server (planned) will do everything below for you; until then, the raw CLI works:
 PYTHONPATH=$(pwd)/VeOmni:$PYTHONPATH sh train.sh tasks/train_llada2_bd.py configs/sft/llada2_mini_bd_sft.yaml
 ```
 

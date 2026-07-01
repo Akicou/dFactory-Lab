@@ -21,7 +21,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "httpx>=0.27", "anyio>=4"]
-engine = ["huggingface_hub>=0.24", "datasets>=2.19", "PyYAML>=6"]
+engine = ["huggingface_hub>=0.24", "datasets>=2.19", "PyYAML>=6", "safetensors>=0.4"]
 
 [project.scripts]
 dfactory-lab = "run:main"
