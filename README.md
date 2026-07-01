@@ -25,7 +25,7 @@ dFactory trains diffusion LLMs (`LLaDA2.1-mini` 16B, `LLaDA2.1-flash` 100B, plus
 4. train with block-diffusion SFT
 5. split the checkpoint back into separate experts
 6. copy the modeling file and package a runnable model
-7. chat with the fine-tuned model
+7. load / eject models and chat — or compare two side by side (Model Arena)
 
 The fine-tuning, merge, split, and diffusion code comes from dFactory (Apache-2.0). The management UI takes cues from Unsloth Studio, whose source is AGPL-3.0 and is studied here, not copied.
 
@@ -93,6 +93,8 @@ export DFACTORY_LAB_SGLANG_URL=http://127.0.0.1:30000   # then start server/run.
 ```
 
 The block-diffusion decoder is a launch-time flag (`--dllm-algorithm`); the app forwards the OpenAI sampling knobs per request. Leave `DFACTORY_LAB_SGLANG_URL` unset to keep the mock.
+
+**Load / eject from the UI.** The Chat page can launch and stop an SGLang server per model itself — pick a local model and hit **Load** (eject frees it), then chat against it or flip on **Compare** to send one prompt to two loaded models side by side. Launch knobs are `DFACTORY_LAB_SGLANG_*` (tp size, mem fraction, attention backend, port base, `SGLANG_MAX_LOADED`, …). On a box without a GPU/SGLang, set `DFACTORY_LAB_SGLANG_SIMULATE=true` to drive the whole load/eject/compare flow against the mock backend.
 
 See [`PACKAGING.md`](./PACKAGING.md) for the desktop (Tauri) path and [`Checklist.md`](./Checklist.md) for the full build plan.
 
