@@ -4,9 +4,12 @@
 def test_root(client):
     r = client.get("/")
     assert r.status_code == 200
-    body = r.json()
-    assert body["ok"] is True
-    assert body["data"]["name"] == "dFactory-Lab"
+    ctype = r.headers.get("content-type", "")
+    if "json" in ctype:
+        assert r.json()["data"]["name"] == "dFactory-Lab"
+    else:
+        # SPA shell served when web/dist is built
+        assert "<div id=\"root\">" in r.text
 
 
 def test_health(client):

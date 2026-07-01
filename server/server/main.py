@@ -136,10 +136,16 @@ def create_app() -> FastAPI:
         return JSONResponse(status_code=exc.status_code,
                             content=ErrorDetail(error=str(exc.detail), detail=None).model_dump())
 
-    @app.get("/", response_model=OK)
-    async def root() -> OK:
-        return OK(data={"name": "dFactory-Lab", "version": __version__, "phase": PHASE,
-                        "docs": "/api/docs", "health": "/api/health"})
+    @app.get("/")
+    async def root():
+        # Serve the SPA shell when the frontend is built; else a JSON info blob.
+        from fastapi.responses import FileResponse
+        from .settings import repo_root
+        idx = repo_root() / "web" / "dist" / "index.html"
+        if idx.is_file():
+            return FileResponse(idx)
+        return JSONResponse({"ok": True, "data": {"name": "dFactory-Lab", "version": __version__,
+                             "phase": PHASE, "docs": "/api/docs", "health": "/api/health"}})
 
     _mount_frontend(app)
     return app
