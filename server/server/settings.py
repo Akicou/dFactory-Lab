@@ -53,6 +53,27 @@ class Settings(BaseSettings):
     master_addr: str = "0.0.0.0"
     master_port: int = 12345
 
+    # ── inference (SGLang) ─────────────────────────────────────────────────
+    # Empty url => the deterministic MockBackend. Set to a running SGLang
+    # OpenAI server (e.g. http://127.0.0.1:30000) to serve real LLaDA2.1 output.
+    sglang_url: str = ""
+    sglang_model: str = "default"
+    sglang_timeout: float = 600.0
+
+    # Chat "load/eject" launches SGLang servers per model (one process each). These
+    # knobs mirror the LLaDA2.1 model-card launch command.
+    sglang_python: str = ""            # "" => sys.executable
+    sglang_host: str = "127.0.0.1"
+    sglang_port_base: int = 30000
+    sglang_max_loaded: int = 2         # two = the compare arena
+    sglang_mem_fraction: float = 0.8
+    sglang_tp_size: int = 1
+    sglang_attention_backend: str = "flashinfer"
+    sglang_dllm_algorithm: str = "JointThreshold"
+    sglang_load_timeout_s: float = 600.0
+    sglang_extra_args: str = ""        # extra flags, shlex-split
+    sglang_simulate: bool = False      # skip the real process; serve via the mock (dev/no-GPU)
+
     # ── integrations ───────────────────────────────────────────────────────
     hf_token: str = ""
     wandb_project: str = ""

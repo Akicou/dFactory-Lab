@@ -72,6 +72,16 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.settings = s
     app.state.registry = registry
     app.state.startup_time = time.time()
+    # Manager for chat "load/eject" (per-model SGLang servers). Torn down by
+    # subprocess_util.terminate_all() on shutdown below.
+    from .services.servers import ServerManager
+    app.state.servers = ServerManager(s)
+    # Wire a real inference backend when SGLang is configured; else stay on the mock.
+    if s.sglang_url.strip():
+        from .services import inference as _inf
+        _inf.set_backend(_inf.SGLangBackend(
+            s.sglang_url.strip(), model=s.sglang_model, timeout=s.sglang_timeout))
+        log.info("inference.backend", backend="sglang", url=s.sglang_url)
     # Stable per-session access token (auto-generated if unset; shown in the banner).
     import secrets as _secrets
     app.state.access_token = s.token.strip() or _secrets.token_urlsafe(16)

@@ -66,8 +66,13 @@ def test_estimate_vram():
 
 def test_config_route(client):
     r = client.get("/api/training/config").json()["data"]
-    assert "llada2-mini" in r["presets"]
+    assert {"llada2-mini", "llada2-21-mini", "llada2-21-flash",
+            "llada2-21-mini-256k"} <= set(r["presets"])
     assert "block_diffusion_mode" in r["diffusion_keys"]
+    # 256k preset points at its own config dir + long-context seq len
+    cfg = svc.build_config("llada2-21-mini-256k")
+    assert cfg["model"]["config_path"].endswith("llada2_21_mini_256k")
+    assert cfg["data"]["max_seq_len"] == 8192
 
 
 def test_finetune_auto_merges(tmp_path):

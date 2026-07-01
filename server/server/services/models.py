@@ -31,6 +31,27 @@ SUPPORTED_MODELS = [
         "size": "100B",
         "config_path": "configs/model_configs/llada2_flash",
     },
+    {
+        "id": "llada2-21-mini",
+        "repo_id": "inclusionAI/LLaDA2.1-mini",
+        "name": "LLaDA2.1-mini",
+        "size": "16B",
+        "config_path": "configs/model_configs/llada2_21_mini",
+    },
+    {
+        "id": "llada2-21-flash",
+        "repo_id": "inclusionAI/LLaDA2.1-flash",
+        "name": "LLaDA2.1-flash",
+        "size": "100B",
+        "config_path": "configs/model_configs/llada2_21_flash",
+    },
+    {
+        "id": "llada2-21-mini-256k",
+        "repo_id": "Akicou/LLaDA2.1-mini-256k-dynamic-ntk",
+        "name": "LLaDA2.1-mini-256k-dynamic-ntk",
+        "size": "16B",
+        "config_path": "configs/model_configs/llada2_21_mini_256k",
+    },
 ]
 
 _MODELING_FILES = moe._MODELING_FILES

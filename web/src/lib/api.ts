@@ -43,3 +43,7 @@ export interface LocalModel {
   has_modeling: boolean; num_experts?: number;
 }
 export interface DatasetRow { id: string; name: string; source: string; path: string; rows: number; created_at: string; }
+export interface LoadedServer {
+  id: string; name: string; model_path: string; port: number;
+  state: "starting" | "ready" | "error" | "stopped"; message: string;
+}

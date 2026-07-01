@@ -83,6 +83,61 @@ class MockBackend:
         }
 
 
+class SGLangBackend:
+    """Proxy to a running SGLang OpenAI-compatible server.
+
+    LLaDA2.1 ships an SGLang integration (see the model card). Launch the server
+    with the block-diffusion decoder, e.g.
+
+        python3 -m sglang.launch_server --model-path inclusionAI/LLaDA2.1-mini \\
+            --dllm-algorithm JointThreshold --trust-remote-code --tp-size 1 \\
+            --mem-fraction-static 0.8 --max-running-requests 1 \\
+            --attention-backend flashinfer
+
+    The dLLM decoding algorithm is a launch-time flag; per request we forward the
+    OpenAI sampling knobs. Point the server at it with DFACTORY_LAB_SGLANG_URL.
+    """
+
+    def __init__(self, base_url: str, *, model: str = "default",
+                 timeout: float = 600.0, client: Any = None) -> None:
+        self.base_url = base_url.rstrip("/")
+        self.model = model
+        self.timeout = timeout
+        self._client = client  # injectable httpx.Client for tests
+        self.loaded_dir: Optional[str] = None
+
+    def load(self, model_dir: str | Path) -> None:
+        # SGLang serves the model chosen at launch; record for provenance/UI only.
+        self.loaded_dir = str(model_dir)
+
+    def generate(self, messages: list[dict], params: DiffusionParams) -> dict:
+        payload: dict[str, Any] = {
+            "model": self.model, "messages": messages,
+            "max_tokens": params.max_new_tokens,
+            "temperature": params.temperature, "top_p": params.top_p,
+        }
+        if params.seed is not None:
+            payload["seed"] = params.seed
+        import httpx
+        client = self._client or httpx.Client(timeout=self.timeout)
+        try:
+            r = client.post(f"{self.base_url}/v1/chat/completions", json=payload)
+            r.raise_for_status()
+            data = r.json()
+        finally:
+            if self._client is None:
+                client.close()
+        choice = (data.get("choices") or [{}])[0]
+        text = (choice.get("message") or {}).get("content", "")
+        usage = data.get("usage") or {}
+        return {
+            "text": text,
+            "tokens_generated": usage.get("completion_tokens", len(text.split())),
+            "diffusion_steps": params.diffusion_steps, "backend": "sglang",
+            "unmasking": None,
+        }
+
+
 _backend: Optional[InferenceBackend] = None
 
 

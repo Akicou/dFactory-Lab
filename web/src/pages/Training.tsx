@@ -54,6 +54,9 @@ export default function Training() {
             <select className="input w-40" value={preset} onChange={(e) => setPreset(e.target.value)}>
               <option value="llada2-mini">llada2-mini</option>
               <option value="llada2-flash">llada2-flash</option>
+              <option value="llada2-21-mini">llada2-21-mini</option>
+              <option value="llada2-21-flash">llada2-21-flash</option>
+              <option value="llada2-21-mini-256k">llada2-21-mini-256k</option>
             </select>
           </div>
         </div>

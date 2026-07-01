@@ -7,7 +7,7 @@ without touching the CLI.
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 [![Engine: dFactory](https://img.shields.io/badge/engine-dFactory-yellow)](https://github.com/inclusionAI/dFactory)
-[![Models: LLaDA2](https://img.shields.io/badge/models-LLaDA2.0%20mini%20%2F%20flash-orange)](https://huggingface.co/inclusionAI)
+[![Models: LLaDA2](https://img.shields.io/badge/models-LLaDA2.1%20mini%20%2F%20flash-orange)](https://huggingface.co/inclusionAI)
 
 </div>
 
@@ -17,7 +17,7 @@ dFactory-Lab wraps the [dFactory](https://github.com/inclusionAI/dFactory) fine-
 
 ## What it does
 
-dFactory trains diffusion LLMs (`LLaDA2.0-mini` 16B, `LLaDA2.0-flash` 100B) with block-diffusion supervised fine-tuning on top of ByteDance [VeOmni](https://github.com/ByteDance-Seed/VeOmni) and `torchrun`. Doing that by hand is a chain of CLI steps. dFactory-Lab drives the same steps from the UI:
+dFactory trains diffusion LLMs (`LLaDA2.1-mini` 16B, `LLaDA2.1-flash` 100B, plus the 2.0-preview line and a 256k long-context `dynamic-ntk` variant) with block-diffusion supervised fine-tuning on top of ByteDance [VeOmni](https://github.com/ByteDance-Seed/VeOmni) and `torchrun`. Doing that by hand is a chain of CLI steps. dFactory-Lab drives the same steps from the UI:
 
 1. download the base model
 2. merge the MoE experts into the training format
@@ -79,6 +79,20 @@ For an actual block-diffusion training run you also need `torch` and the VeOmni 
 cd VeOmni && uv sync --extra gpu && source .venv/bin/activate && cd ..
 PYTHONPATH=$(pwd)/VeOmni:$PYTHONPATH sh train.sh tasks/train_llada2_bd.py configs/sft/llada2_mini_bd_sft.yaml
 ```
+
+### Real inference (SGLang)
+
+Chat runs on a deterministic mock backend by default. To serve real LLaDA2.1 output, launch the model's SGLang server (per its model card) and point the app at it:
+
+```bash
+python3 -m sglang.launch_server --model-path inclusionAI/LLaDA2.1-mini \
+  --dllm-algorithm JointThreshold --trust-remote-code --tp-size 1 \
+  --mem-fraction-static 0.8 --max-running-requests 1 --attention-backend flashinfer
+
+export DFACTORY_LAB_SGLANG_URL=http://127.0.0.1:30000   # then start server/run.py
+```
+
+The block-diffusion decoder is a launch-time flag (`--dllm-algorithm`); the app forwards the OpenAI sampling knobs per request. Leave `DFACTORY_LAB_SGLANG_URL` unset to keep the mock.
 
 See [`PACKAGING.md`](./PACKAGING.md) for the desktop (Tauri) path and [`Checklist.md`](./Checklist.md) for the full build plan.
 

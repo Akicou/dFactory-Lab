@@ -89,19 +89,30 @@ DEFAULT_CONFIG = {
     },
 }
 
-def _flash_config() -> dict:
+def _preset(config_dir: str, model_slug: str, *, output_slug: str,
+            global_batch_size: int = 8, max_seq_len: Optional[int] = None) -> dict:
+    """Clone DEFAULT_CONFIG and point it at a different vendored config dir + model."""
     cfg = json.loads(json.dumps(DEFAULT_CONFIG))
     cfg["model"].update({
-        "config_path": "./configs/model_configs/llada2_flash",
-        "model_path": "./LLaDA2.0-flash-preview-moe-merge",
-        "tokenizer_path": "./LLaDA2.0-flash-preview-moe-merge"})
-    cfg["train"].update({"output_dir": "./llada2_flash_bd_sft_outputs", "global_batch_size": 16})
+        "config_path": f"./configs/model_configs/{config_dir}",
+        "model_path": f"./{model_slug}",
+        "tokenizer_path": f"./{model_slug}"})
+    cfg["train"].update({"output_dir": f"./{output_slug}", "global_batch_size": global_batch_size})
+    if max_seq_len is not None:
+        cfg["data"]["max_seq_len"] = max_seq_len
     return cfg
 
 
 PRESETS = {
     "llada2-mini": DEFAULT_CONFIG,
-    "llada2-flash": _flash_config(),
+    "llada2-flash": _preset("llada2_flash", "LLaDA2.0-flash-preview-moe-merge",
+                            output_slug="llada2_flash_bd_sft_outputs", global_batch_size=16),
+    "llada2-21-mini": _preset("llada2_21_mini", "LLaDA2.1-mini-moe-merge",
+                              output_slug="llada2_21_mini_bd_sft_outputs"),
+    "llada2-21-flash": _preset("llada2_21_flash", "LLaDA2.1-flash-moe-merge",
+                               output_slug="llada2_21_flash_bd_sft_outputs", global_batch_size=16),
+    "llada2-21-mini-256k": _preset("llada2_21_mini_256k", "LLaDA2.1-mini-256k-dynamic-ntk-moe-merge",
+                                   output_slug="llada2_21_mini_256k_bd_sft_outputs", max_seq_len=8192),
 }
 
 REQUIRED_KEYS = {

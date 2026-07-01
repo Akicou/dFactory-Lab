@@ -137,6 +137,21 @@ def run_tracked(
     return {"returncode": rc, "stdout_tail": tail, "stderr_tail": "", "command": display}
 
 
+def register(key: str, proc: subprocess.Popen) -> None:
+    """Track a long-lived process (e.g. a loaded inference server) so it is reaped
+    by terminate_all on shutdown."""
+    with _lock:
+        _processes.setdefault(key, []).append(proc)
+
+
+def terminate(key: str) -> None:
+    """Terminate every process registered under *key* and drop it."""
+    with _lock:
+        procs = _processes.pop(key, [])
+    for proc in procs:
+        _terminate(proc, key)
+
+
 def _terminate(proc: subprocess.Popen, job_id: str) -> None:
     """SIGTERM the process group, then SIGKILL after a grace period."""
     if proc.poll() is not None:

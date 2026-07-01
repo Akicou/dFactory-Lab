@@ -37,9 +37,11 @@ const SHOTS = [
     route: "/chat", name: "chat", label: "Chat & diffusion playground",
     interact: async (page) => {
       await page.fill('input[placeholder="Message…"]', "Explain masked diffusion in one line.");
-      await page.click("button.btn-primary");
-      await page.waitForSelector("text=Unmasking", { timeout: 10000 });
-      await page.waitForTimeout(500);
+      // Send button is the sibling right after the message input (not the Load button).
+      await page.click('input[placeholder="Message…"] + button');
+      // Wait for the assistant reply bubble (bg-sunken), not the "show unmasking" label.
+      await page.waitForSelector(".bg-sunken", { timeout: 15000 });
+      await page.waitForTimeout(600);
     },
   },
   {

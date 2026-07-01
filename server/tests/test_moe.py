@@ -78,10 +78,15 @@ def test_catalog_route(client):
     assert r.status_code == 200
     data = r.json()["data"]
     ids = {m["id"] for m in data}
-    assert {"llada2-mini", "llada2-flash"} <= ids
+    assert {"llada2-mini", "llada2-flash",
+            "llada2-21-mini", "llada2-21-flash", "llada2-21-mini-256k"} <= ids
     mini = next(m for m in data if m["id"] == "llada2-mini")
     assert mini["meta"]["num_experts"] == 256
     assert mini["repo_id"] == "inclusionAI/LLaDA2.0-mini-preview"
+    # 2.1 configs parse and carry the vendored metadata
+    k256 = next(m for m in data if m["id"] == "llada2-21-mini-256k")
+    assert k256["meta"]["num_experts"] == 256
+    assert k256["repo_id"] == "Akicou/LLaDA2.1-mini-256k-dynamic-ntk"
 
 
 def test_local_inventory_and_merge_route(tmp_path, client):

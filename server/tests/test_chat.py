@@ -1,4 +1,6 @@
 """SPDX-License-Identifier: Apache-2.0 - chat / inference routes (mock backend)."""
+import json
+
 from server.services import inference as svc
 
 
@@ -23,11 +25,59 @@ def test_completions_uses_diffusion_params(client):
 
 
 def test_compare_route(client):
-    body = {"base_dir": "/tmp/b", "tuned_dir": "/tmp/t",
+    # No loaded servers => both sides fall back to the global mock backend.
+    body = {"left_id": "", "right_id": "",
             "messages": [{"role": "user", "content": "q"}]}
     r = client.post("/api/chat/compare", json=body).json()["data"]
-    assert "base" in r and "tuned" in r
-    assert "text" in r["base"]
+    assert "left" in r and "right" in r
+    assert "text" in r["left"]
+
+
+def test_load_eject_simulated(client, monkeypatch):
+    monkeypatch.setenv("DFACTORY_LAB_SGLANG_SIMULATE", "true")
+    from server.settings import reset_settings_cache
+    reset_settings_cache()
+    # rebuild the app's manager with the simulate setting
+    from server.services.servers import ServerManager
+    from server.settings import get_settings
+    client.app.state.servers = ServerManager(get_settings())
+
+    # model_path must resolve under <data_dir>/models
+    from pathlib import Path
+    model_path = str(Path(client.app.state.settings.data_dir) / "models" / "LLaDA2.1-mini")
+    r = client.post("/api/chat/load", json={"model_path": model_path}).json()["data"]
+    assert "id" in r, r
+    sid = r["id"]
+    loaded = client.get("/api/chat/loaded").json()["data"]
+    assert any(s["id"] == sid and s["state"] == "ready" for s in loaded)
+
+    # chat routed to the loaded (simulated) server
+    res = client.post("/api/chat/completions", json={
+        "server_id": sid, "messages": [{"role": "user", "content": "hi"}]}).json()["data"]
+    assert res["response"]
+
+    assert client.post("/api/chat/eject", json={"id": sid}).json()["data"]["ok"] is True
+    assert client.get("/api/chat/loaded").json()["data"] == []
+
+
+def test_sglang_backend_maps_openai():
+    """SGLangBackend forwards OpenAI sampling knobs and unwraps the response."""
+    import httpx
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        body = json.loads(request.content)
+        assert request.url.path == "/v1/chat/completions"
+        assert body["max_tokens"] == 128 and body["messages"][-1]["content"] == "hi"
+        return httpx.Response(200, json={
+            "choices": [{"message": {"content": "pong"}}],
+            "usage": {"completion_tokens": 3}})
+
+    client = httpx.Client(transport=httpx.MockTransport(handler))
+    be = svc.SGLangBackend("http://sglang:30000", client=client)
+    out = be.generate([{"role": "user", "content": "hi"}],
+                      svc.DiffusionParams(max_new_tokens=128))
+    assert out["text"] == "pong" and out["tokens_generated"] == 3
+    assert out["backend"] == "sglang"
 
 
 def test_show_unmasking(client):
