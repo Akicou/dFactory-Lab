@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-export = APIRouter(prefix="/api/export", tags=["export"])
 chat = APIRouter(prefix="/api/chat", tags=["chat"])
 
 
@@ -19,13 +18,6 @@ def _todo(phase: int, feature: str) -> dict:
         status_code=501,
         detail=f"{feature} is implemented in Phase {phase} (see Checklist.md).",
     )
-
-
-# ── export (Phase 5) ─────────────────────────────────────────────────────────
-@export.post("")
-async def export_create(): _todo(5, "POST /api/export")
-@export.get("/{export_id}")
-async def export_status(export_id: str): _todo(5, "GET /api/export/{id}")
 
 
 # ── chat / inference (Phase 6) ───────────────────────────────────────────────
