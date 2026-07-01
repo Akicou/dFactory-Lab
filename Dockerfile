@@ -47,7 +47,7 @@ COPY tasks/ ./tasks/
 COPY train.sh ./train.sh
 COPY --from=web /web/dist ./web/dist
 
-ENV PYTHONPATH=/app/VeOmni:${PYTHONPATH}
+ENV PYTHONPATH=/app/VeOmni
 
 EXPOSE 8000
 # Serve the UI at / and the API at /api on 0.0.0.0 (RunPod proxy reaches it).
