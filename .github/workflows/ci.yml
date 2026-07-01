@@ -17,7 +17,7 @@ jobs:
   backend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with: { submodules: recursive }
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
@@ -41,7 +41,7 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with: { node-version: "22" }
       - name: Install
@@ -54,7 +54,7 @@ jobs:
   hygiene:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: No committed model weights or datasets
         run: |
           ! git ls-files | grep -E '\.(safetensors|bin|pt|pth|ckpt|gguf)$' \
