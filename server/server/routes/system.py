@@ -25,10 +25,10 @@ def _uptime(req: Request) -> float:
     return round(time.time() - req.app.state.startup_time, 2)
 
 
-@router.get("/health", response_model=Health)
-async def health(req: Request) -> Health:
+@router.get("/health")
+async def health(req: Request) -> OK:
     registry = req.app.state.registry
-    return Health(
+    return OK(data=Health(
         status="ok",
         version=__version__,
         phase=PHASE,
@@ -36,7 +36,7 @@ async def health(req: Request) -> Health:
         uptime_s=_uptime(req),
         active_jobs=registry.active_count() if registry else 0,
         gpu=req.app.state.hardware if getattr(req.app.state, "hardware", None) else None,
-    )
+    ))
 
 
 @router.get("/liveness")
@@ -65,19 +65,19 @@ async def audit_log(req: Request, limit: int = 100) -> OK:
     return OK(data=audit_svc.recent(req.app.state.settings.db_path(), limit=limit))
 
 
-@router.get("/system", response_model=SystemInfo)
-async def system(req: Request) -> SystemInfo:
+@router.get("/system")
+async def system(req: Request) -> OK:
     import platform, sys
     from ..settings import repo_root
     s = req.app.state.settings
-    return SystemInfo(
+    return OK(data=SystemInfo(
         python=sys.version.split()[0],
         platform=platform.platform(),
         cpus=__import__("os").cpu_count() or 1,
         hardware=req.app.state.hardware or {},
         data_dir=str(s.data_dir),
         engine_present=(repo_root() / "train.sh").is_file(),
-    )
+    ))
 
 
 @router.post("/shutdown")

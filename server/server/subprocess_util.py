@@ -65,7 +65,7 @@ def run_tracked(
 
     Returns ``{"returncode": int, "stdout_tail": str, "stderr_tail": str, "command": str}``.
     Raises ``subprocess.CalledProcessError`` on non-zero exit when the caller sets
-    ``check`` — here we always return the dict so job functions can record the failure.
+    ``check`` - here we always return the dict so job functions can record the failure.
     """
     assert isinstance(argv, list) and all(isinstance(a, str) for a in argv), "argv must be a list[str]"
     display = argv_for_display(argv)

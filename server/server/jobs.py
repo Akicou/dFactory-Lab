@@ -279,5 +279,5 @@ def init_registry(db_path: Path, max_workers: int = 4) -> JobRegistry:
 
 def get_registry() -> JobRegistry:
     if _registry is None:
-        raise RuntimeError("JobRegistry not initialized — call init_registry() first")
+        raise RuntimeError("JobRegistry not initialized - call init_registry() first")
     return _registry

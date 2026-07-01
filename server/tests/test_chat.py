@@ -1,4 +1,4 @@
-"""SPDX-License-Identifier: Apache-2.0 — chat / inference routes (mock backend)."""
+"""SPDX-License-Identifier: Apache-2.0 - chat / inference routes (mock backend)."""
 from server.services import inference as svc
 
 

@@ -37,15 +37,15 @@ export default function Dashboard() {
         <div className="eyebrow">Phase 7 · Editorial Paper</div>
         <h1 className="text-3xl mt-1">Fine-tune diffusion LLMs, without the CLI.</h1>
         <p className="text-muted mt-2 max-w-2xl leading-relaxed">
-          dFactory-Lab wraps the dFactory engine — download, MoE expert merge, dataset prep,
-          block-diffusion SFT, split, packaging and chat — behind one lab console.
+          dFactory-Lab wraps the dFactory engine - download, MoE expert merge, dataset prep,
+          block-diffusion SFT, split, packaging and chat - behind one lab console.
         </p>
       </header>
 
       {/* status strip */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Stat label="Server" value={health?.status ?? "—"} ok={health?.status === "ok"} />
-        <Stat label="Hardware" value={health?.gpu ? `${health.gpu.backend} ×${health.gpu.device_count}` : "—"} />
+        <Stat label="Server" value={health?.status ?? "-"} ok={health?.status === "ok"} />
+        <Stat label="Hardware" value={health?.gpu ? `${health.gpu.backend} ×${health.gpu.device_count}` : "-"} />
         <Stat label="Active jobs" value={String(health?.active_jobs ?? 0)} />
         <Stat label="Engine vendored" value={sys?.engine_present ? "yes" : "no"} ok={sys?.engine_present} />
       </section>

@@ -1,4 +1,4 @@
-"""SPDX-License-Identifier: Apache-2.0 — MoE merge/split round-trip on a tiny fixture."""
+"""SPDX-License-Identifier: Apache-2.0 - MoE merge/split round-trip on a tiny fixture."""
 import json
 from pathlib import Path
 

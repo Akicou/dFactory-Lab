@@ -3,7 +3,7 @@ dFactory-Lab server entrypoint (Checklist B-4, B-5, B-9, B-10, B-11, B-21, B-22)
 
 Self-contained: ``python server/run.py`` boots the FastAPI app under uvicorn,
 finds a free port if the requested one is taken, prints the access banner, and
-runs until Ctrl+C / ``POST /api/shutdown`` — tearing down every tracked
+runs until Ctrl+C / ``POST /api/shutdown`` - tearing down every tracked
 subprocess (training, merge, download) on the way out. Mirrors Unsloth Studio's
 run.py shape without copying its (AGPL) source.
 """
@@ -27,7 +27,7 @@ os.environ.setdefault("PYTHONWARNINGS", "ignore")
 
 
 def _ensure_utf8_stdio() -> None:
-    """Windows cp1252 can't encode the banner emoji (or non-ASCII paths) — force UTF-8.
+    """Windows cp1252 can't encode the banner emoji (or non-ASCII paths) - force UTF-8.
     Mirrors Unsloth main.py's Windows setup (Checklist B-26)."""
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):

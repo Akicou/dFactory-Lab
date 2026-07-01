@@ -1,4 +1,4 @@
-"""SPDX-License-Identifier: Apache-2.0 — bootstrap-token auth + audit log."""
+"""SPDX-License-Identifier: Apache-2.0 - bootstrap-token auth + audit log."""
 from fastapi.testclient import TestClient
 
 

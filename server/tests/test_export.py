@@ -1,4 +1,4 @@
-"""SPDX-License-Identifier: Apache-2.0 — export pipeline (split + modeling copy + manifest)."""
+"""SPDX-License-Identifier: Apache-2.0 - export pipeline (split + modeling copy + manifest)."""
 import json
 import shutil
 import time

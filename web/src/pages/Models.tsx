@@ -15,7 +15,7 @@ export default function Models() {
       <header>
         <div className="eyebrow">Phase 2 · Model hub</div>
         <h1 className="text-3xl mt-1">Models & MoE merge / split</h1>
-        <p className="text-muted mt-2 max-w-2xl">Download a dLLM, merge separate→merged experts for training, split back after — all as managed jobs.</p>
+        <p className="text-muted mt-2 max-w-2xl">Download a dLLM, merge separate→merged experts for training, split back after - all as managed jobs.</p>
       </header>
 
       {/* catalog */}
@@ -68,7 +68,7 @@ export default function Models() {
             </div>
           ))}
           {(!local.data || local.data.length === 0) && (
-            <div className="px-4 py-8 text-center text-faint text-sm">No local models yet — download one above.</div>
+            <div className="px-4 py-8 text-center text-faint text-sm">No local models yet - download one above.</div>
           )}
         </div>
       </section>

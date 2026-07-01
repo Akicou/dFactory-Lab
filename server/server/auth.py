@@ -2,8 +2,8 @@
 Bootstrap-token auth (Checklist A-*).
 
 Loopback binds (the default) are open for local development. When the server is
-exposed (0.0.0.0 / :: / tunnel), every /api/* request — except a small
-allowlist — must present the bootstrap access token (Authorization: Bearer <token>
+exposed (0.0.0.0 / :: / tunnel), every /api/* request - except a small
+allowlist - must present the bootstrap access token (Authorization: Bearer <token>
 or ?token=). This mirrors Unsloth Studio's model without copying its code.
 """
 from __future__ import annotations

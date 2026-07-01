@@ -26,7 +26,7 @@ class DiffusionParams(BaseModel):
 
     Note: unlike autoregressive decoders, the LLaDA2 generate() recomputes
     attention each step (no incremental KV-cache speedup), and historically does
-    NOT accept repetition_penalty — so it is intentionally absent here.
+    NOT accept repetition_penalty - so it is intentionally absent here.
     """
     diffusion_steps: int = Field(32, ge=1, le=1024, description="denoising iterations")
     mask_schedule: str = Field("linear", description="linear|geometric|cosine")

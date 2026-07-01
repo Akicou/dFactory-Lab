@@ -4,7 +4,7 @@ Hardware detection (Checklist H-2, H-19).
 Detects CUDA / ROCm / Apple Silicon (MPS) / CPU. ``CUDA_DEVICE_ORDER`` is pinned
 to ``PCI_BUS_ID`` *before* any torch import so a GPU index chosen from nvidia-smi
 matches the one torch/CUDA resolve (Unsloth's main.py documents this mismatch).
-torch is imported lazily and optional — the server boots and reports ``cpu`` when
+torch is imported lazily and optional - the server boots and reports ``cpu`` when
 the ML stack is absent.
 """
 from __future__ import annotations

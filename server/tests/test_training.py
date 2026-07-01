@@ -1,4 +1,4 @@
-"""SPDX-License-Identifier: Apache-2.0 — training config + launcher."""
+"""SPDX-License-Identifier: Apache-2.0 - training config + launcher."""
 import time
 
 import yaml

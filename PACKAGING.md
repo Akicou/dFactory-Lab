@@ -5,7 +5,7 @@ dFactory-Lab ships as **two artifacts**: a Python **server** (`server/`) and a
 the frontend can run as a standalone **Tauri desktop** app talking to the server
 in `--api-only` mode.
 
-## 1. Web (primary) — served by the backend
+## 1. Web (primary) - served by the backend
 
 ```bash
 # build the frontend
@@ -20,7 +20,7 @@ The FastAPI app's `_mount_frontend()` serves `web/dist/index.html` at `/` and on
 any unknown client route; `/api/*` is the JSON API. In dev, `npm run dev`
 (Vite :5174) proxies `/api` → `127.0.0.1:8000`.
 
-## 2. Desktop (Tauri) — planned
+## 2. Desktop (Tauri) - planned
 
 The desktop path wraps the same `web/` build in a Tauri 2 shell and launches the
 server in `--api-only` mode (no SPA, CORS locked to `tauri://localhost`). It
@@ -40,7 +40,7 @@ and the loopback-only server bind keep the desktop app local by default.
 
 ## 3. Security posture at distribution time
 
-- Default bind is **127.0.0.1** (loopback) — open locally, no token needed.
+- Default bind is **127.0.0.1** (loopback) - open locally, no token needed.
 - Network exposure (`-H 0.0.0.0` / tunnel) is opt-in and then **token-gated**:
   every `/api/*` request (bar health/liveness/auth/docs) needs
   `Authorization: Bearer <token>` or `?token=`. The bootstrap token is printed in

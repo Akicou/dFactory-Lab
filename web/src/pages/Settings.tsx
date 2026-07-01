@@ -17,7 +17,7 @@ export default function Settings() {
       <section className="card p-5">
         <div className="eyebrow mb-3">Security posture</div>
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-2 text-sm">
-          <Row k="Bind" v={sec.data?.bind ?? "—"} />
+          <Row k="Bind" v={sec.data?.bind ?? "-"} />
           <Row k="Exposed" v={String(sec.data?.exposed ?? false)} warn={sec.data?.exposed} />
           <Row k="Auth required" v={String(sec.data?.auth_required ?? false)} ok={sec.data?.auth_required && sec.data?.exposed} />
           <Row k="Bootstrap token" v={sec.data?.token_present ? "set" : "auto (loopback)"} />
@@ -33,20 +33,20 @@ export default function Settings() {
       <section className="card p-5">
         <div className="eyebrow mb-3">System</div>
         <div className="grid md:grid-cols-2 gap-x-8 gap-y-2 text-sm">
-          <Row k="Python" v={sys.data?.python ?? "—"} />
-          <Row k="Platform" v={sys.data?.platform ?? "—"} />
-          <Row k="CPUs" v={String(sys.data?.cpus ?? "—")} />
-          <Row k="Hardware" v={sys.data?.hardware ? `${sys.data.hardware.backend} ×${sys.data.hardware.device_count}` : "—"} />
-          <Row k="Data dir" v={sys.data?.data_dir ?? "—"} mono />
+          <Row k="Python" v={sys.data?.python ?? "-"} />
+          <Row k="Platform" v={sys.data?.platform ?? "-"} />
+          <Row k="CPUs" v={String(sys.data?.cpus ?? "-")} />
+          <Row k="Hardware" v={sys.data?.hardware ? `${sys.data.hardware.backend} ×${sys.data.hardware.device_count}` : "-"} />
+          <Row k="Data dir" v={sys.data?.data_dir ?? "-"} mono />
           <Row k="Engine vendored" v={sys.data?.engine_present ? "yes" : "no"} ok={sys.data?.engine_present} />
         </div>
       </section>
 
       <section className="card p-5">
-        <div className="eyebrow mb-2">Design system — Editorial Paper (locked)</div>
+        <div className="eyebrow mb-2">Design system - Editorial Paper (locked)</div>
         <p className="text-sm text-muted leading-relaxed">
           Warm paper base, ink text, a single terracotta accent, serif display + grotesque body + mono data.
-          Deliberately distinct from — and not — the generic black+blue “AI-slop” SaaS look.
+          Deliberately distinct from - and not - the generic black+blue “AI-slop” SaaS look.
         </p>
         <div className="flex gap-2 mt-3">
           {["#faf7f2", "#1c1a17", "#bf431d", "#c9772a", "#e2dacb"].map((c) => (

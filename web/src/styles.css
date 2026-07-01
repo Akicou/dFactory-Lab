@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * dFactory-Lab — "Editorial Paper" design system (locked Phase 7).
+ * dFactory-Lab - "Editorial Paper" design system (locked Phase 7).
  * Distinct, light-first, magazine-grade. Deliberately NOT the black+blue
  * "AI-slop" gradient SaaS look. Warm paper base, ink text, single terracotta
  * accent, serif display + grotesque body + monospace data.
@@ -44,7 +44,7 @@
 }
 
 @layer components {
-  /* small uppercase eyebrow label — the editorial signature */
+  /* small uppercase eyebrow label - the editorial signature */
   .eyebrow {
     font-family: var(--font-sans);
     text-transform: uppercase;

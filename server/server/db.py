@@ -3,7 +3,7 @@ SQLite persistence (Checklist B-16, B-17).
 
 - WAL mode + foreign keys ON (PRAGMA foreign_keys, cascading deletes)
 - per-call connections via a ``connection()`` context manager (no shared handle
-  across threads — SQLite serializes anyway, and this avoids "database is locked"
+  across threads - SQLite serializes anyway, and this avoids "database is locked"
   under the job framework's writers)
 - idempotent migrations: ``migrate()`` introspects PRAGMA table_info and ALTERs
   only missing columns, so it is safe to run on every startup

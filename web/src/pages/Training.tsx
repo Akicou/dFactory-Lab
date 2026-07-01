@@ -39,7 +39,7 @@ export default function Training() {
       <header>
         <div className="eyebrow">Phase 4 · Training</div>
         <h1 className="text-3xl mt-1">Block-diffusion SFT</h1>
-        <p className="text-muted mt-2 max-w-2xl">Configure every YAML key — including the diffusion knobs — then launch torchrun (dry-run here; real run needs GPU + VeOmni).</p>
+        <p className="text-muted mt-2 max-w-2xl">Configure every YAML key - including the diffusion knobs - then launch torchrun (dry-run here; real run needs GPU + VeOmni).</p>
       </header>
 
       <section className="card p-5 space-y-4">

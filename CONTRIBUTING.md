@@ -1,7 +1,7 @@
 # Contributing to dFactory-Lab
 
 Thanks for helping build a lab console for fine-tuning diffusion LLMs. The full plan of record is
-[`Checklist.md`](./Checklist.md) — most contributions should map to an item there.
+[`Checklist.md`](./Checklist.md) - most contributions should map to an item there.
 
 ## Workflow
 
@@ -37,7 +37,7 @@ cd web && npm ci && npm run typecheck && npm run build
 
 - **Never commit** model weights (`.safetensors/.bin/.pt/.ckpt/.gguf`), datasets, or secrets. CI rejects them.
 - Keep shell scripts LF (`.gitattributes` enforces this).
-- The dFactory engine stays **Apache-2.0**. Unsloth Studio is **AGPL-3.0** — study its patterns, do **not**
+- The dFactory engine stays **Apache-2.0**. Unsloth Studio is **AGPL-3.0** - study its patterns, do **not**
   copy its source into this repo.
 - UI must follow the locked **design system** (distinct; no generic black/blue AI-slop look). See Checklist §7.
 

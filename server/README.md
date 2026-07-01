@@ -1,4 +1,4 @@
-# `server/` — dFactory-Lab backend (planned)
+# `server/` - dFactory-Lab backend (planned)
 
 FastAPI application that **starts the same way as Unsloth Studio** (`run.py` → uvicorn, with a startup banner and
 bootstrap token) but **drives the dFactory pipeline** for the user: download → MoE merge → dataset build →

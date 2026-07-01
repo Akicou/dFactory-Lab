@@ -15,7 +15,7 @@ def test_root(client):
 def test_health(client):
     r = client.get("/api/health")
     assert r.status_code == 200
-    body = r.json()
+    body = r.json()["data"]
     assert body["status"] == "ok"
     assert body["active_jobs"] == 0
     assert "uptime_s" in body

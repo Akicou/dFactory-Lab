@@ -2,8 +2,8 @@
 Startup banner (Checklist B-21, B-22).
 
 Stdlib-only (safe to import before the app). Mirrors the Unsloth Studio banner
-shape — loopback URL, external URL when bound to the wildcard, API base, health
-URL, and the bootstrap token — but branded for dFactory-Lab. ANSI accents lean
+shape - loopback URL, external URL when bound to the wildcard, API base, health
+URL, and the bootstrap token - but branded for dFactory-Lab. ANSI accents lean
 warm (terracotta/amber) to preview the locked Editorial Paper direction.
 """
 from __future__ import annotations
