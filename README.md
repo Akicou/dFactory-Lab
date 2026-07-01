@@ -88,7 +88,7 @@ First end-to-end build. The server, the UI, and the MoE merge/split round trip a
 
 ## Design
 
-The UI is a light, paper-toned theme with one warm accent, serif headings, and monospace data. It is its own design rather than a reskin of another tool.
+The UI is a clean white theme with soft corners, lucide line icons, and quiet motion. It is its own design rather than a reskin of another tool.
 
 ## License
 
