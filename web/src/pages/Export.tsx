@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useJobRunner, JobPill } from "@/lib/hooks";
+import { useJobRunner, JobPill } from "../lib/hooks";
 
 export default function Export() {
   const exp = useJobRunner();

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { api, type DatasetRow } from "@/lib/api";
-import { useApi, useJobRunner, JobPill } from "@/lib/hooks";
+import { api, type DatasetRow } from "../lib/api";
+import { useApi, useJobRunner, JobPill } from "../lib/hooks";
 
 const SAMPLE = JSON.stringify(
   [{ question: "What is 2+2?", answer: "4" }, { question: "Capital of France?", answer: "Paris" }], null, 2);

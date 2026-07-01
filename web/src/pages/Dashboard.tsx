@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, type Health, type SystemInfo } from "@/lib/api";
+import { api, type Health, type SystemInfo } from "../lib/api";
 
 const PIPELINE = [
   { n: 1, label: "Download", to: "/models" },

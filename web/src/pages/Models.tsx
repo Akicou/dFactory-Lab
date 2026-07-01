@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { type ModelMeta, type LocalModel } from "@/lib/api";
-import { useApi, useJobRunner, JobPill, fmtBytes } from "@/lib/hooks";
+import { type ModelMeta, type LocalModel } from "../lib/api";
+import { useApi, useJobRunner, JobPill, fmtBytes } from "../lib/hooks";
 
 export default function Models() {
   const catalog = useApi<ModelMeta[]>("/api/models", 0);

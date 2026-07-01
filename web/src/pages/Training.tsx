@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { api } from "@/lib/api";
-import { useApi, useJobRunner, JobPill } from "@/lib/hooks";
+import { api } from "../lib/api";
+import { useApi, useJobRunner, JobPill } from "../lib/hooks";
 
 interface Run { id: string; status: string; config_path: string; output_dir: string; created_at: string }
 

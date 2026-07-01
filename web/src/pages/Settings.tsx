@@ -1,4 +1,4 @@
-import { useApi } from "@/lib/hooks";
+import { useApi } from "../lib/hooks";
 
 interface Security { bind: string; loopback: boolean; exposed: boolean; auth_required: boolean; token_present: boolean }
 interface System { python: string; platform: string; cpus: number; hardware: { backend: string; device_count: number }; data_dir: string; engine_present: boolean }

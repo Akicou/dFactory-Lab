@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "@/lib/api";
+import { api } from "../lib/api";
 
 interface GenResult { response: string; details: { diffusion_steps: number; unmasking: { step: number; unmasked_frac: number }[] | null; tokens_generated: number } }
 
