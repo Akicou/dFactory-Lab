@@ -36,10 +36,10 @@ def test_jobs_endpoint(client):
 
 
 def test_pipeline_stub_returns_501(client):
-    # models (P2) + datasets (P3) are real; training is still a Phase 4 stub
-    r = client.get("/api/training/runs")
+    # models/datasets/training are real; export is still a Phase 5 stub
+    r = client.post("/api/export")
     assert r.status_code == 501
-    assert "Phase 4" in r.json()["error"]
+    assert "Phase 5" in r.json()["error"]
 
 
 def test_max_body_rejected(client):

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-training = APIRouter(prefix="/api/training", tags=["training"])
 export = APIRouter(prefix="/api/export", tags=["export"])
 chat = APIRouter(prefix="/api/chat", tags=["chat"])
 
@@ -20,17 +19,6 @@ def _todo(phase: int, feature: str) -> dict:
         status_code=501,
         detail=f"{feature} is implemented in Phase {phase} (see Checklist.md).",
     )
-
-
-# ── training (Phase 4) ───────────────────────────────────────────────────────
-@training.get("/config")
-async def training_config_schema(): _todo(4, "GET /api/training/config")
-@training.post("/start")
-async def training_start(): _todo(4, "POST /api/training/start")
-@training.get("/runs")
-async def training_runs(): _todo(4, "GET /api/training/runs")
-@training.get("/runs/{run_id}")
-async def training_run(run_id: str): _todo(4, "GET /api/training/runs/{id}")
 
 
 # ── export (Phase 5) ─────────────────────────────────────────────────────────
