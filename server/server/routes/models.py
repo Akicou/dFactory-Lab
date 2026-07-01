@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from ..logging_config import get_logger
 from ..schemas import OK
 from ..services import models as svc
+from ..services.audit import audit_req
 from ..subprocess_util import PathEscapeError, validate_path
 
 router = APIRouter(prefix="/api/models", tags=["models"])
@@ -68,6 +69,7 @@ async def download(body: DownloadReq, req: Request) -> OK:
                                   nest_under_repo_name=body.nest_under_repo_name, update=update)
 
     jid = req.app.state.registry.submit("download", fn, payload={"repo_id": body.repo_id})
+    audit_req(req, action="models.download", target=body.repo_id, detail={"job_id": jid})
     return OK(data={"job_id": jid, "kind": "download"})
 
 
@@ -96,4 +98,6 @@ def _submit_convert(req: Request, mode: str, input_dir: str, output_dir: str) ->
 
     jid = req.app.state.registry.submit(mode, _job,
                                         payload={"input": str(in_resolved), "output": str(out_resolved)})
+    audit_req(req, action=f"models.{mode}", target=str(in_resolved),
+              detail={"job_id": jid, "output": str(out_resolved)})
     return OK(data={"job_id": jid, "kind": mode})

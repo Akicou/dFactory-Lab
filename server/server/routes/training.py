@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from ..logging_config import get_logger
 from ..schemas import OK
 from ..services import training as svc
+from ..services.audit import audit_req
 
 router = APIRouter(prefix="/api/training", tags=["training"])
 log = get_logger(__name__)
@@ -85,5 +86,7 @@ async def start(body: StartReq, req: Request) -> OK:
     rid = svc.register_run(s.db_path(), job_id=jid, model_id=body.model_id or "",
                            dataset_id=body.dataset_id or "", config_path=str(cfg_path),
                            output_dir=cfg["train"]["output_dir"])
+    audit_req(req, action="training.start", target=rid,
+              detail={"preset": body.preset, "config": str(cfg_path), "dry_run": body.dry_run})
     return OK(data={"job_id": jid, "run_id": rid, "config_path": str(cfg_path),
                     "dry_run": body.dry_run})

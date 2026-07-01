@@ -72,6 +72,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.settings = s
     app.state.registry = registry
     app.state.startup_time = time.time()
+    # Stable per-session access token (auto-generated if unset; shown in the banner).
+    import secrets as _secrets
+    app.state.access_token = s.token.strip() or _secrets.token_urlsafe(16)
     log.info("lifespan.startup", host=s.host, port=s.port, data_dir=str(s.data_dir))
 
     # Hardware probe is best-effort and fast (lazy torch); run it now so
@@ -122,6 +125,8 @@ def create_app() -> FastAPI:
     app.add_middleware(MaxBodyMiddleware)
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(SecurityHeadersMiddleware)
+    from .auth import AuthMiddleware
+    app.add_middleware(AuthMiddleware)
 
     from .routes import system, models, datasets, training, export, chat
     app.include_router(system.router)

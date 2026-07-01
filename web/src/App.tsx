@@ -6,7 +6,7 @@ import Datasets from "@/pages/Datasets";
 import Training from "@/pages/Training";
 import Export from "@/pages/Export";
 import Chat from "@/pages/Chat";
-import { Settings } from "@/pages/Placeholders";
+import Settings from "@/pages/Settings";
 
 export default function App() {
   return (

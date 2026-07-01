@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from ..logging_config import get_logger
 from ..schemas import OK
 from ..services import export as svc
+from ..services.audit import audit_req
 from ..subprocess_util import PathEscapeError, validate_path
 
 router = APIRouter(prefix="/api/export", tags=["export"])
@@ -45,6 +46,8 @@ async def export_model(body: ExportReq, req: Request) -> OK:
 
     jid = req.app.state.registry.submit("export", fn,
                                         payload={"source": body.source, "export_name": body.export_name})
+    audit_req(req, action="export.run", target=body.export_name,
+              detail={"job_id": jid, "source": body.source})
     return OK(data={"job_id": jid, "kind": "export", "export_dir": str(export_dir)})
 
 

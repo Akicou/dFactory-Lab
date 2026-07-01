@@ -12,6 +12,7 @@ from pydantic import BaseModel
 from ..logging_config import get_logger
 from ..schemas import OK
 from ..services import datasets as svc
+from ..services.audit import audit_req
 
 router = APIRouter(prefix="/api/datasets", tags=["datasets"])
 log = get_logger(__name__)
@@ -62,6 +63,8 @@ async def convert(body: ConvertReq, req: Request) -> OK:
         res["eval_path"] = str(eval_path)
     did = svc.register_dataset(req.app.state.settings.db_path(), name=body.name,
                                source="convert", path=str(out_dir), rows=len(valid))
+    audit_req(req, action="datasets.convert", target=str(out_dir),
+              detail={"id": did, "rows": len(valid)})
     return OK(data={"id": did, **res})
 
 
@@ -89,6 +92,8 @@ async def build(body: BuildReq, req: Request) -> OK:
 
     jid = req.app.state.registry.submit("build_dataset", fn,
                                         payload={"preset": body.preset, "name": body.name})
+    audit_req(req, action="datasets.build", target=body.preset,
+              detail={"job_id": jid, "name": body.name})
     return OK(data={"job_id": jid, "kind": "build_dataset", "out_dir": str(out_dir)})
 
 

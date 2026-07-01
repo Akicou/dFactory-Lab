@@ -12,8 +12,10 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 
 from .. import __version__, PHASE
+from ..auth import auth_required, access_token, verify
 from ..logging_config import get_logger
 from ..schemas import Health, OK, SystemInfo
+from ..services import audit as audit_svc
 
 router = APIRouter(prefix="/api", tags=["system"])
 log = get_logger(__name__)
@@ -40,6 +42,27 @@ async def health(req: Request) -> Health:
 @router.get("/liveness")
 async def liveness() -> OK:
     return OK(data={"alive": True})
+
+
+@router.get("/auth/verify")
+async def auth_verify(req: Request) -> OK:
+    return OK(data={"auth_required": auth_required(req), "verified": verify(req),
+                    "token_present": bool(access_token(req))})
+
+
+@router.get("/security")
+async def security(req: Request) -> OK:
+    s = req.app.state.settings
+    return OK(data={
+        "bind": s.host, "loopback": s.is_loopback, "exposed": not s.is_loopback,
+        "auth_required": auth_required(req), "token_present": bool(access_token(req)),
+        "engine_present": __import__("pathlib").Path(__file__).resolve().parents[3] and True,
+    })
+
+
+@router.get("/audit")
+async def audit_log(req: Request, limit: int = 100) -> OK:
+    return OK(data=audit_svc.recent(req.app.state.settings.db_path(), limit=limit))
 
 
 @router.get("/system", response_model=SystemInfo)
