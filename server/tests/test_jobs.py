@@ -63,12 +63,11 @@ def test_error_captured(tmp_path):
 def test_reconcile_on_startup(tmp_path):
     p = tmp_path / "t.sqlite"
     dbmod.init_db(p)
-    reg = JobRegistry(p)
-    jid = reg.submit("download", lambda job, update: None)
-    j = reg.get(jid)
-    j.state = "running"  # simulate a crash mid-run
-    reg._persist(j)
-    reg2 = JobRegistry(p)  # new process
-    n = reg2.reconcile_on_startup()
+    # Simulate a process that crashed mid-run: a 'running' job row left in the DB.
+    with dbmod.connection(p) as conn:
+        conn.execute("INSERT INTO jobs (id, kind, state, created_at) VALUES (?,?,?,?)",
+                     ("deadjob", "train", "running", "2026-01-01T00:00:00Z"))
+    reg = JobRegistry(p)  # new process loads it as 'running'
+    n = reg.reconcile_on_startup()
     assert n == 1
-    assert reg2.get(jid).state == "error"
+    assert reg.get("deadjob").state == "error"

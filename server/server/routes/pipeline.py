@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-models = APIRouter(prefix="/api/models", tags=["models"])
 datasets = APIRouter(prefix="/api/datasets", tags=["datasets"])
 training = APIRouter(prefix="/api/training", tags=["training"])
 export = APIRouter(prefix="/api/export", tags=["export"])
@@ -22,19 +21,6 @@ def _todo(phase: int, feature: str) -> dict:
         status_code=501,
         detail=f"{feature} is implemented in Phase {phase} (see Checklist.md).",
     )
-
-
-# ── models / hub (Phase 2) ───────────────────────────────────────────────────
-@models.get("")
-async def models_list(): _todo(2, "GET /api/models")
-@models.post("/download")
-async def models_download(): _todo(2, "POST /api/models/download")
-@models.post("/merge")
-async def models_merge(): _todo(2, "POST /api/models/merge")
-@models.post("/split")
-async def models_split(): _todo(2, "POST /api/models/split")
-@models.get("/local")
-async def models_local(): _todo(2, "GET /api/models/local")
 
 
 # ── datasets (Phase 3) ───────────────────────────────────────────────────────

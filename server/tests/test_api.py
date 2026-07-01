@@ -36,9 +36,10 @@ def test_jobs_endpoint(client):
 
 
 def test_pipeline_stub_returns_501(client):
-    r = client.get("/api/models")
+    # models is real in Phase 2; datasets is still a Phase 3 stub
+    r = client.get("/api/datasets")
     assert r.status_code == 501
-    assert "Phase 2" in r.json()["error"]
+    assert "Phase 3" in r.json()["error"]
 
 
 def test_max_body_rejected(client):
