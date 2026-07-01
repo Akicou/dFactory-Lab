@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+/*
+ * dFactory-Lab — "Editorial Paper" design system (locked Phase 7).
+ * Distinct, light-first, magazine-grade. Deliberately NOT the black+blue
+ * "AI-slop" gradient SaaS look. Warm paper base, ink text, single terracotta
+ * accent, serif display + grotesque body + monospace data.
+ */
+@theme {
+  --color-paper: #faf7f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4efe7;
+  --color-recess: #efe8dc;
+  --color-ink: #1c1a17;
+  --color-ink-2: #3a352e;
+  --color-muted: #6b6358;
+  --color-faint: #9a9082;
+  --color-rule: #e2dacb;
+  --color-accent: #bf431d;
+  --color-accent-2: #c9772a;
+  --color-accent-soft: #f4e4d6;
+  --color-ok: #3f7d4f;
+  --color-warn: #b35a1a;
+  --color-danger: #a23a23;
+
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --radius-paper: 3px;
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv01", "tnum";
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; letter-spacing: -0.01em; }
+  ::selection { background: var(--color-accent-soft); color: var(--color-ink); }
+}
+
+@layer components {
+  /* small uppercase eyebrow label — the editorial signature */
+  .eyebrow {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-paper);
+  }
+  .rule { border-color: var(--color-rule); }
+  .mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+  .tnum { font-variant-numeric: tabular-nums; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: var(--font-sans); font-weight: 500; font-size: 0.875rem;
+    padding: 0.45rem 0.85rem; border-radius: var(--radius-paper);
+    border: 1px solid var(--color-rule); background: var(--color-surface);
+    color: var(--color-ink); cursor: pointer; transition: background 0.12s ease;
+  }
+  .btn:hover { background: var(--color-surface-2); }
+  .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff7f0; }
+  .btn-primary:hover { background: #a53a18; }
+  .input {
+    width: 100%; background: var(--color-surface); border: 1px solid var(--color-rule);
+    border-radius: var(--radius-paper); padding: 0.4rem 0.6rem; font-size: 0.875rem;
+    font-family: var(--font-sans); color: var(--color-ink);
+  }
+  .input:focus { outline: 2px solid var(--color-accent-soft); border-color: var(--color-accent); }
+  .badge {
+    display: inline-flex; align-items: center; font-family: var(--font-mono);
+    font-size: 0.6875rem; padding: 0.1rem 0.4rem; border-radius: var(--radius-paper);
+    border: 1px solid var(--color-rule); background: var(--color-surface-2); color: var(--color-ink-2);
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-paper); color: var(--color-ink-2); font-size: 0.9rem;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: var(--color-surface-2); }
+  .nav-item.active {
+    background: var(--color-accent-soft); color: var(--color-ink);
+    border-left-color: var(--color-accent); font-weight: 600;
+  }
+}
