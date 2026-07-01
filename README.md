@@ -81,11 +81,12 @@ pip install -e VeOmni/
 PYTHONPATH=$(pwd)/VeOmni:$PYTHONPATH sh train.sh tasks/train_llada2_bd.py configs/sft/llada2_mini_bd_sft.yaml
 ```
 
-## Design direction (TBD — picked in Phase 7)
+## Design direction — locked: (A) Editorial Paper
 
 The UI **must be visually distinct** from Unsloth/dFactory and **must avoid the generic "AI-slop" black + blue
-gradient SaaS look.** Three candidate directions are proposed in `Checklist.md → Design System`; one will be
-locked before frontend work begins.
+gradient SaaS look.** Direction **(A) Editorial Paper** is locked: warm off-white paper base, ink-near-black text,
+a single terracotta/saffron accent, serif display + grotesque body + mono. Light-first, magazine-grade. See
+`Checklist.md → Design System` for the full token spec (Phase 7).
 
 ## Roadmap
 

@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dfactory-lab-server"
+version = "0.1.0"
+description = "dFactory-Lab FastAPI server — wraps the dFactory dLLM fine-tuning engine."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "dFactory-Lab" }]
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "structlog>=24.1",
+    "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27", "anyio>=4"]
+engine = ["huggingface_hub>=0.24", "datasets>=2.19", "PyYAML>=6"]
+
+[project.scripts]
+dfactory-lab = "run:main"
+
+[tool.setuptools]
+packages = ["server", "server.routes"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

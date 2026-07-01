@@ -328,3 +328,8 @@ Thumbs.db
 
 # Docs build
 site/
+
+# dFactory-Lab managed data dirs (local runs / tests)
+.lab/
+.lab-*/
+server/.lab-test/
