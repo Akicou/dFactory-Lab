@@ -29,6 +29,16 @@ class StartReq(BaseModel):
     dry_run: bool = False
 
 
+class FinetuneReq(BaseModel):
+    model_source: str
+    dataset_path: str
+    preset: str = "llada2-mini"
+    overrides: dict | None = None
+    dry_run: bool = True
+    model_id: str | None = None
+    dataset_id: str | None = None
+
+
 @router.get("/config")
 async def config_schema() -> OK:
     return OK(data={
@@ -90,3 +100,32 @@ async def start(body: StartReq, req: Request) -> OK:
               detail={"preset": body.preset, "config": str(cfg_path), "dry_run": body.dry_run})
     return OK(data={"job_id": jid, "run_id": rid, "config_path": str(cfg_path),
                     "dry_run": body.dry_run})
+
+
+@router.post("/finetune")
+async def finetune(body: FinetuneReq, req: Request) -> OK:
+    """One-click finetune: auto-merge the model, then train (the merge step runs
+    for real; the torchrun step is dry-run unless a GPU runtime is present)."""
+    from ..subprocess_util import PathEscapeError, validate_path
+    s = req.app.state.settings
+    roots = [Path(s.data_dir).resolve(), Path(__file__).resolve().parents[3]]
+    try:
+        validate_path(body.model_source, roots)
+        validate_path(body.dataset_path, roots)
+    except PathEscapeError as exc:
+        return OK(data={"ok": False, "error": str(exc)})
+
+    def fn(job, update):
+        return svc.finetune(model_source=body.model_source, dataset_path=body.dataset_path,
+                            preset=body.preset, overrides=body.overrides, settings=s,
+                            update=update, dry_run=body.dry_run)
+
+    jid = req.app.state.registry.submit("train", fn,
+                                        payload={"model_source": body.model_source, "preset": body.preset})
+    rid = svc.register_run(s.db_path(), job_id=jid, model_id=body.model_id or "",
+                           dataset_id=body.dataset_id or "", config_path="finetune",
+                           output_dir="(orchestrated)")
+    audit_req(req, action="training.finetune", target=rid,
+              detail={"model_source": body.model_source, "dataset_path": body.dataset_path,
+                      "dry_run": body.dry_run})
+    return OK(data={"job_id": jid, "run_id": rid})

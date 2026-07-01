@@ -35,7 +35,7 @@ def test_security_headers(client):
 def test_jobs_endpoint(client):
     r = client.get("/api/jobs")
     assert r.status_code == 200
-    assert r.json() == []
+    assert r.json()["data"] == []
 
 
 def test_all_pipeline_routes_real(client):

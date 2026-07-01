@@ -70,6 +70,6 @@ export function fmtBytes(n: number): string {
 
 export function JobPill({ state }: { state: string }) {
   const color = state === "done" ? "text-ok" : state === "error" ? "text-danger"
-    : state === "running" ? "text-accent-2" : "text-faint";
+    : state === "running" ? "text-warn" : "text-faint";
   return <span className={`badge mono ${color}`}>{state}</span>;
 }

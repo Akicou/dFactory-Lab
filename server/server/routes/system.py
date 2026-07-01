@@ -94,23 +94,23 @@ async def shutdown(req: Request) -> OK:
 
 # ── jobs (cross-cutting; feature routes submit into this registry) ──────────
 @router.get("/jobs")
-async def list_jobs(req: Request, kind: str | None = None, limit: int = 100) -> Any:
+async def list_jobs(req: Request, kind: str | None = None, limit: int = 100) -> OK:
     registry = req.app.state.registry
-    return [j.to_dict() for j in registry.list(kind=kind, limit=limit)]
+    return OK(data=[j.to_dict() for j in registry.list(kind=kind, limit=limit)])
 
 
 @router.get("/jobs/{job_id}")
-async def get_job(job_id: str, req: Request) -> Any:
+async def get_job(job_id: str, req: Request) -> OK:
     job = req.app.state.registry.get(job_id)
     if job is None:
-        return {"ok": False, "error": "job not found", "id": job_id}
-    return job.to_dict()
+        return OK(data={"ok": False, "error": "job not found", "id": job_id})
+    return OK(data=job.to_dict())
 
 
 @router.post("/jobs/{job_id}/cancel")
-async def cancel_job(job_id: str, req: Request) -> Any:
+async def cancel_job(job_id: str, req: Request) -> OK:
     ok = req.app.state.registry.cancel(job_id)
-    return {"ok": ok, "id": job_id}
+    return OK(data={"ok": ok, "id": job_id})
 
 
 @router.get("/jobs/{job_id}/events")

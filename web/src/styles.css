@@ -1,95 +1,117 @@
 @import "tailwindcss";
 
 /*
- * dFactory-Lab - "Editorial Paper" design system (locked Phase 7).
- * Distinct, light-first, magazine-grade. Deliberately NOT the black+blue
- * "AI-slop" gradient SaaS look. Warm paper base, ink text, single terracotta
- * accent, serif display + grotesque body + monospace data.
+ * dFactory-Lab UI theme: clean white, shadcn-style. Soft corners, neutral
+ * palette, lucide line icons, quiet motion. Monochrome on purpose.
  */
 @theme {
-  --color-paper: #faf7f2;
+  --color-app: #fafafa;
   --color-surface: #ffffff;
-  --color-surface-2: #f4efe7;
-  --color-recess: #efe8dc;
-  --color-ink: #1c1a17;
-  --color-ink-2: #3a352e;
-  --color-muted: #6b6358;
-  --color-faint: #9a9082;
-  --color-rule: #e2dacb;
-  --color-accent: #bf431d;
-  --color-accent-2: #c9772a;
-  --color-accent-soft: #f4e4d6;
-  --color-ok: #3f7d4f;
-  --color-warn: #b35a1a;
-  --color-danger: #a23a23;
+  --color-sunken: #f4f4f5;
+  --color-edge: #ececef;
+  --color-edge-2: #dcdce0;
+  --color-ink: #18181b;
+  --color-ink-soft: #3f3f46;
+  --color-muted: #71717a;
+  --color-faint: #a1a1aa;
+  --color-primary: #18181b;
+  --color-primary-fg: #ffffff;
+  --color-primary-hover: #2a2a2e;
+  --color-ok: #16a34a;
+  --color-warn: #d97706;
+  --color-danger: #dc2626;
 
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, sans-serif;
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
-
-  --radius-paper: 3px;
 }
 
 @layer base {
   html { -webkit-text-size-adjust: 100%; }
   body {
-    background-color: var(--color-paper);
+    background-color: var(--color-app);
     color: var(--color-ink);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv01", "tnum";
+    font-feature-settings: "cv01", "tnum";
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { font-family: var(--font-serif); font-weight: 600; letter-spacing: -0.01em; }
-  ::selection { background: var(--color-accent-soft); color: var(--color-ink); }
+  h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; }
+  ::selection { background: #18181b; color: #fff; }
 }
 
 @layer components {
-  /* small uppercase eyebrow label - the editorial signature */
-  .eyebrow {
-    font-family: var(--font-sans);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    color: var(--color-muted);
+  .label {
+    font-size: 0.75rem; font-weight: 500; color: var(--color-muted);
   }
   .card {
     background: var(--color-surface);
-    border: 1px solid var(--color-rule);
-    border-radius: var(--radius-paper);
+    border: 1px solid var(--color-edge);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 2px rgba(24, 24, 27, 0.04);
+    transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
   }
-  .rule { border-color: var(--color-rule); }
+  .card-hover:hover { box-shadow: 0 8px 24px rgba(24, 24, 27, 0.08); }
   .mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
   .tnum { font-variant-numeric: tabular-nums; }
+
   .btn {
-    display: inline-flex; align-items: center; gap: 0.4rem;
-    font-family: var(--font-sans); font-weight: 500; font-size: 0.875rem;
-    padding: 0.45rem 0.85rem; border-radius: var(--radius-paper);
-    border: 1px solid var(--color-rule); background: var(--color-surface);
-    color: var(--color-ink); cursor: pointer; transition: background 0.12s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    font-weight: 500; font-size: 0.875rem; line-height: 1;
+    padding: 0.55rem 0.95rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--color-edge-2); background: var(--color-surface);
+    color: var(--color-ink); cursor: pointer;
+    transition: background 140ms ease, border-color 140ms ease, transform 80ms ease, opacity 140ms ease;
   }
-  .btn:hover { background: var(--color-surface-2); }
-  .btn-primary { background: var(--color-accent); border-color: var(--color-accent); color: #fff7f0; }
-  .btn-primary:hover { background: #a53a18; }
+  .btn:hover { background: var(--color-sunken); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-primary-fg); }
+  .btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--color-muted); }
+  .btn-ghost:hover { background: var(--color-sunken); color: var(--color-ink); }
+
   .input {
-    width: 100%; background: var(--color-surface); border: 1px solid var(--color-rule);
-    border-radius: var(--radius-paper); padding: 0.4rem 0.6rem; font-size: 0.875rem;
-    font-family: var(--font-sans); color: var(--color-ink);
+    width: 100%; background: var(--color-surface); border: 1px solid var(--color-edge-2);
+    border-radius: var(--radius-sm); padding: 0.5rem 0.7rem; font-size: 0.875rem;
+    color: var(--color-ink); transition: border-color 120ms ease, box-shadow 120ms ease;
   }
-  .input:focus { outline: 2px solid var(--color-accent-soft); border-color: var(--color-accent); }
+  .input::placeholder { color: var(--color-faint); }
+  .input:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08); }
+
   .badge {
-    display: inline-flex; align-items: center; font-family: var(--font-mono);
-    font-size: 0.6875rem; padding: 0.1rem 0.4rem; border-radius: var(--radius-paper);
-    border: 1px solid var(--color-rule); background: var(--color-surface-2); color: var(--color-ink-2);
+    display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.6875rem; padding: 0.15rem 0.45rem; border-radius: var(--radius-sm);
+    background: var(--color-sunken); color: var(--color-ink-soft); border: 1px solid var(--color-edge);
   }
+
   .nav-item {
-    display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.75rem;
-    border-radius: var(--radius-paper); color: var(--color-ink-2); font-size: 0.9rem;
-    border-left: 2px solid transparent;
+    display: flex; align-items: center; gap: 0.7rem; padding: 0.5rem 0.7rem;
+    border-radius: var(--radius-sm); color: var(--color-muted); font-size: 0.9rem; font-weight: 500;
+    transition: background 140ms ease, color 140ms ease;
   }
-  .nav-item:hover { background: var(--color-surface-2); }
-  .nav-item.active {
-    background: var(--color-accent-soft); color: var(--color-ink);
-    border-left-color: var(--color-accent); font-weight: 600;
-  }
+  .nav-item:hover { background: var(--color-sunken); color: var(--color-ink); }
+  .nav-item.active { background: var(--color-sunken); color: var(--color-ink); }
+  .nav-item.active .nav-bar { opacity: 1; }
+}
+
+/* ── motion ─────────────────────────────────────────────────────────────── */
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse-soft { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+.anim-rise { animation: rise 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-fade { animation: fade 240ms ease both; }
+.anim-stagger > * { animation: rise 320ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-stagger > *:nth-child(1) { animation-delay: 30ms; }
+.anim-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.anim-stagger > *:nth-child(3) { animation-delay: 90ms; }
+.anim-stagger > *:nth-child(4) { animation-delay: 120ms; }
+.anim-stagger > *:nth-child(5) { animation-delay: 150ms; }
+.anim-stagger > *:nth-child(6) { animation-delay: 180ms; }
+.pulse { animation: pulse-soft 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }

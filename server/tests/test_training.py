@@ -1,6 +1,7 @@
 """SPDX-License-Identifier: Apache-2.0 - training config + launcher."""
 import time
 
+import pytest
 import yaml
 
 from server.services import training as svc
@@ -69,6 +70,41 @@ def test_config_route(client):
     assert "block_diffusion_mode" in r["diffusion_keys"]
 
 
+def test_finetune_auto_merges(tmp_path):
+    """Finetune must merge a separate-expert model before training."""
+    pytest.importorskip("safetensors")
+    import json
+    import numpy as np
+    from safetensors.numpy import save_file as np_save_file
+    from server.services import moe
+
+    sep = tmp_path / "sep"
+    sep.mkdir()
+    sd = {}
+    for L in range(2):
+        for e in range(4):
+            for p in ["gate_proj", "up_proj", "down_proj"]:
+                sd[f"model.layers.{L}.mlp.experts.{e}.{p}.weight"] = np.random.randn(4, 8).astype("float32")
+    sd["model.embed_tokens.weight"] = np.random.randn(10, 4).astype("float32")
+    np_save_file(sd, str(sep / "model.safetensors"))
+    (sep / "config.json").write_text(json.dumps({"num_hidden_layers": 2, "num_experts": 4,
+        "first_k_dense_replace": 0, "vocab_size": 10, "hidden_size": 4, "model_type": "llada2_moe_veomni"}))
+    (tmp_path / "train.jsonl").write_text('{"messages":[{"role":"user","content":"hi"}]}\n')
+
+    s = Settings()
+    s.data_dir = tmp_path
+    logs: list[str] = []
+    res = svc.finetune(model_source=str(sep), dataset_path=str(tmp_path / "train.jsonl"),
+                       settings=s, preset="llada2-mini",
+                       update=lambda p, m: logs.append(m), dry_run=True)
+
+    assert res["merged"] is True
+    assert res["model_path"].endswith("-merged")
+    assert moe.detect_format(res["model_path"]) == "merged_expert"
+    assert res["launch"]["argv"][0] == "torchrun"
+    assert any("merg" in l.lower() for l in logs)
+
+
 def test_start_dry_run_route(client):
     r = client.post("/api/training/start", json={"preset": "llada2-mini",
                                                  "overrides": {"train": {"output_dir": "./out"}},
@@ -78,7 +114,7 @@ def test_start_dry_run_route(client):
     assert data["dry_run"] is True
     jid = data["job_id"]
     for _ in range(100):
-        j = client.get(f"/api/jobs/{jid}").json()
+        j = client.get(f"/api/jobs/{jid}").json()["data"]
         if j.get("state") in ("done", "error"):
             break
         time.sleep(0.05)

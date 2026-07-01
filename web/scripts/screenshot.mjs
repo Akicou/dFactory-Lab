@@ -27,19 +27,17 @@ const OUT = process.env.OUT_DIR || path.resolve(__dirname, "..", "screenshots");
 const SHOTS = [
   {
     route: "/", name: "dashboard", label: "Dashboard",
-    ready: async (p) => p.waitForFunction(
-      () => /uptime_s/.test(document.querySelector("pre")?.textContent || ""),
-      { timeout: 12000 }),
+    ready: async (p) => p.waitForSelector("text=ok", { timeout: 12000 }),
   },
-  { route: "/models", name: "models", label: "Models & MoE merge",
+  { route: "/models", name: "models", label: "Models",
     ready: async (p) => p.waitForSelector("text=LLaDA2.0", { timeout: 10000 }) },
-  { route: "/training", name: "training", label: "Training config",
-    ready: async (p) => p.waitForSelector("text=block_diffusion_mode", { timeout: 10000 }) },
+  { route: "/training", name: "training", label: "Training",
+    ready: async (p) => p.waitForSelector("text=Hyperparameters", { timeout: 10000 }) },
   {
     route: "/chat", name: "chat", label: "Chat & diffusion playground",
     interact: async (page) => {
-      await page.fill('input[placeholder="message…"]', "Explain masked diffusion in one line.");
-      await page.click('button.btn-primary:has-text("send")');
+      await page.fill('input[placeholder="Message…"]', "Explain masked diffusion in one line.");
+      await page.click("button.btn-primary");
       await page.waitForSelector("text=Unmasking", { timeout: 10000 });
       await page.waitForTimeout(500);
     },

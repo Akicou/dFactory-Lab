@@ -101,7 +101,7 @@ def test_local_inventory_and_merge_route(tmp_path, client):
 
     import time
     for _ in range(100):
-        j = client.get(f"/api/jobs/{jid}").json()
+        j = client.get(f"/api/jobs/{jid}").json()["data"]
         if j.get("state") in ("done", "error"):
             break
         time.sleep(0.05)

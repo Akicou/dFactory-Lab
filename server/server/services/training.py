@@ -284,3 +284,47 @@ def launch(config_path: str | Path, settings, *, update: Optional[Callable] = No
     res["last_metric"] = last_metric
     res["log_path"] = str(log_path)
     return res
+
+
+def finetune(*, model_source: str, dataset_path: str, settings,
+             preset: str = "llada2-mini", overrides: Optional[dict] = None,
+             update: Optional[Callable] = None, dry_run: bool = True) -> dict:
+    """One-click finetune: merge the model into training format if needed, build
+    the config, and launch torchrun. This is the flow the UI drives so the user
+    never merges manually (Checklist: merge happens when you run a finetune)."""
+    from . import moe
+
+    def log(p: float, msg: str) -> None:
+        if update:
+            update(p, msg)
+
+    src = Path(model_source)
+    fmt = moe.detect_format(src)
+    if fmt == "separate_expert":
+        merged = src.parent / (src.name + "-merged")
+        log(0.05, "merging MoE experts for training")
+        moe.convert(src, merged, "merge", on_log=lambda m: log(0.12, m))
+        model_path = str(merged)
+        log(0.4, "model merged")
+    else:
+        model_path = str(src)
+        log(0.05, f"model already {fmt or 'unknown'}, skipping merge")
+
+    cfg = build_config(preset, overrides)
+    cfg["model"]["model_path"] = model_path
+    cfg["model"]["tokenizer_path"] = model_path
+    cfg["data"]["train_path"] = dataset_path
+    ok, errs = validate_config(cfg)
+    if not ok:
+        raise ValueError("; ".join(errs))
+    cfg_path = write_config_yaml(
+        cfg, Path(settings.data_dir) / "configs" / f"finetune-{preset}.yaml")
+    log(0.45, "config ready")
+
+    # map launch's 0..1 progress into the 0.45..1.0 band
+    def _launch_update(p: float, msg: str, **_: object) -> None:
+        log(0.45 + 0.55 * max(0.0, p), msg)
+
+    res = launch(cfg_path, settings, update=_launch_update, dry_run=dry_run)
+    return {"config_path": str(cfg_path), "model_path": model_path,
+            "merged": fmt == "separate_expert", "launch": res}

@@ -1,57 +1,49 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { LayoutDashboard, Boxes, Database, FlaskConical, Save, MessageSquare, Settings, FlaskRound } from "lucide-react";
 
 const NAV = [
-  { to: "/", label: "Dashboard", end: true, glyph: "◷" },
-  { to: "/models", label: "Models & Merge", glyph: "▤" },
-  { to: "/datasets", label: "Datasets", glyph: "≣" },
-  { to: "/training", label: "Training", glyph: "△" },
-  { to: "/export", label: "Export", glyph: "↗" },
-  { to: "/chat", label: "Chat", glyph: "✶" },
-  { to: "/settings", label: "Settings", glyph: "⚙" },
+  { to: "/", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/models", label: "Models", icon: Boxes },
+  { to: "/datasets", label: "Datasets", icon: Database },
+  { to: "/training", label: "Training", icon: FlaskConical },
+  { to: "/export", label: "Save model", icon: Save },
+  { to: "/chat", label: "Chat", icon: MessageSquare },
+  { to: "/settings", label: "Settings", icon: Settings },
 ];
 
 export default function Layout() {
+  const { pathname } = useLocation();
   return (
     <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <aside className="w-60 shrink-0 border-r rule bg-surface-2/60 flex flex-col">
-        <div className="px-5 py-5 border-b rule">
-          <div className="eyebrow">dFactory · Lab</div>
-          <div className="font-serif text-xl leading-tight mt-0.5">
-            dLLM <span className="text-accent">finetune</span>
+      <aside className="w-60 shrink-0 border-r border-edge bg-surface flex flex-col">
+        <div className="px-5 py-5 flex items-center gap-2.5">
+          <span className="grid place-items-center w-8 h-8 rounded-lg bg-primary text-primary-fg">
+            <FlaskRound size={17} />
+          </span>
+          <div className="leading-tight">
+            <div className="text-sm font-semibold">dFactory Lab</div>
+            <div className="text-[11px] text-faint">dLLM finetune</div>
           </div>
         </div>
-        <nav className="flex-1 px-2 py-3 space-y-0.5">
+        <nav className="flex-1 px-2.5 py-2 space-y-0.5">
           {NAV.map((n) => (
-            <NavLink
-              key={n.to}
-              to={n.to}
-              end={n.end}
-              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-            >
-              <span className="text-faint w-4 text-center">{n.glyph}</span>
+            <NavLink key={n.to} to={n.to} end={n.end}
+              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}>
+              <n.icon size={17} strokeWidth={1.9} />
               {n.label}
             </NavLink>
           ))}
         </nav>
-        <div className="px-5 py-4 border-t rule">
-          <div className="eyebrow mb-1">Editorial Paper</div>
-          <p className="text-xs text-muted leading-relaxed">
-            Warm paper · terracotta accent · serif headlines. Not the black+blue SaaS look.
-          </p>
+        <div className="px-5 py-4 border-t border-edge text-[11px] text-faint">
+          v0.1.0
         </div>
       </aside>
 
-      {/* Main */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="h-14 border-b rule flex items-center justify-between px-8 bg-paper/80 backdrop-blur">
-          <div className="eyebrow">Diffusion LLM Laboratory</div>
-          <a className="text-xs text-muted hover:text-accent" href="/api/docs" target="_blank" rel="noreferrer">
-            API reference ↗
-          </a>
-        </header>
-        <main className="flex-1 overflow-auto px-8 py-7 max-w-[1200px] w-full">
-          <Outlet />
+        <main className="flex-1 overflow-auto px-8 py-8">
+          <div key={pathname} className="anim-rise max-w-[1180px] mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
