@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: dFactory engine (upstream)
+    url: https://github.com/inclusionAI/dFactory
+    about: Engine-level questions about block-diffusion SFT, LLaDA2, or VeOmni belong upstream.
+  - name: VeOmni framework (upstream)
+    url: https://github.com/ByteDance-Seed/VeOmni
+    about: Distributed-training framework issues belong in the VeOmni repo.

@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Engine / backend (Python) ────────────────────────────────────────────
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install ruff
+        run: pip install ruff
+      - name: Lint (ruff)
+        run: ruff check . || true   # enforced once server/ lands (Checklist §1)
+      - name: Verify engine configs parse
+        run: |
+          python -c "import yaml,glob; [yaml.safe_load(open(f)) for f in glob.glob('configs/**/*.yaml', recursive=True)]"
+      # TODO (Checklist §1): install server deps, run pytest once server/ exists.
+
+  # ── Frontend (Node) ──────────────────────────────────────────────────────
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+      - name: Check frontend exists
+        id: web
+        run: |
+          if [ -f web/package.json ]; then echo "exists=true" >> $GITHUB_OUTPUT; else echo "exists=false" >> $GITHUB_OUTPUT; fi
+      - name: Install
+        if: steps.web.outputs.exists == 'true'
+        working-directory: web
+        run: npm ci
+      - name: Typecheck + build
+        if: steps.web.outputs.exists == 'true'
+        working-directory: web
+        run: npm run build
+
+  # ── Repo hygiene ─────────────────────────────────────────────────────────
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: No committed model weights or datasets
+        run: |
+          ! git ls-files | grep -E '\.(safetensors|bin|pt|pth|ckpt|gguf)$' \
+            || (echo "::error::Model artifact committed"; exit 1)
+      - name: CRLF check on shell scripts
+        run: |
+          if git ls-files '*.sh' | xargs file | grep -q CRLF; then
+            echo "::error::CRLF line endings in a .sh file"; exit 1
+          fi

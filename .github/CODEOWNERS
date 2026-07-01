@@ -1,0 +1,9 @@
+# Default owners for the whole repo. Update with real handles.
+*                       @dfactory-lab/maintainers
+
+# Engine vendored from upstream dFactory — tag engine reviewers on changes.
+/configs/               @dfactory-lab/engine
+/models/                @dfactory-lab/engine
+/scripts/               @dfactory-lab/engine
+/tasks/                 @dfactory-lab/engine
+/train.sh               @dfactory-lab/engine

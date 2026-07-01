@@ -1,0 +1,11 @@
+# dFactory-Lab vendors the ByteDance VeOmni distributed-training framework as a
+# git submodule, exactly like upstream dFactory. The Lab server shells out to
+# VeOmni (via train.sh / torchrun) for block-diffusion SFT.
+#
+# After cloning this repo, initialize the framework:
+#   git submodule update --init --recursive
+#   pip install -e VeOmni/        # or:  uv sync --extra gpu   (inside VeOmni/)
+[submodule "VeOmni"]
+	path = VeOmni
+	url = https://github.com/ByteDance-Seed/VeOmni.git
+	branch = main

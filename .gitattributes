@@ -1,0 +1,39 @@
+# Normalize text files to LF in the repo, checkout as-is on each OS
+* text=auto eol=lf
+
+# Shell scripts must always be LF (they run under bash / WSL / CI)
+*.sh           text eol=lf
+train.sh       text eol=lf
+*.bash         text eol=lf
+
+# Windows-only scripts stay CRLF
+*.bat          text eol=crlf
+*.cmd          text eol=crlf
+*.ps1          text eol=crlf
+
+# Source / config
+*.py           text eol=lf
+*.ts           text eol=lf
+*.tsx          text eol=lf
+*.js           text eol=lf
+*.jsx          text eol=lf
+*.mjs          text eol=lf
+*.json         text eol=lf
+*.yaml         text eol=lf
+*.yml          text eol=lf
+*.toml         text eol=lf
+*.md           text eol=lf
+*.css          text eol=lf
+*.html         text eol=lf
+
+# Treat model/dataset artifacts as binary (git LFS recommended in production)
+*.safetensors  binary
+*.bin          binary
+*.pt           binary
+*.pth          binary
+*.ckpt         binary
+*.gguf         binary
+*.webp         binary
+*.png          binary
+*.jpg          binary
+*.ico          binary
