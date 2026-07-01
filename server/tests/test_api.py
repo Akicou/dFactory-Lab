@@ -35,11 +35,15 @@ def test_jobs_endpoint(client):
     assert r.json() == []
 
 
-def test_pipeline_stub_returns_501(client):
-    # all of models/datasets/training/export are real; chat is still a Phase 6 stub
-    r = client.get("/api/chat/history")
-    assert r.status_code == 501
-    assert "Phase 6" in r.json()["error"]
+def test_all_pipeline_routes_real(client):
+    """By Phase 6 every pipeline route is implemented (no 501s)."""
+    spec = client.get("/api/openapi.json").json()
+    paths = set(spec["paths"])
+    for p in ("/api/models", "/api/models/local", "/api/datasets",
+              "/api/datasets/convert", "/api/training/config", "/api/training/start",
+              "/api/export", "/api/chat/completions", "/api/chat/compare", "/api/chat/history"):
+        assert p in paths, f"missing route {p}"
+    assert client.get("/api/chat/params").status_code == 200
 
 
 def test_max_body_rejected(client):

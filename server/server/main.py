@@ -123,13 +123,13 @@ def create_app() -> FastAPI:
     app.add_middleware(LoggingMiddleware)
     app.add_middleware(SecurityHeadersMiddleware)
 
-    from .routes import system, models, datasets, training, export, pipeline
+    from .routes import system, models, datasets, training, export, chat
     app.include_router(system.router)
     app.include_router(models.router)
     app.include_router(datasets.router)
     app.include_router(training.router)
     app.include_router(export.router)
-    app.include_router(pipeline.chat)
+    app.include_router(chat.router)
 
     @app.exception_handler(HTTPException)
     async def http_exc_handler(request: Request, exc: HTTPException):  # noqa: ANN001
